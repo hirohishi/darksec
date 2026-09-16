@@ -1,5 +1,7 @@
 # darksec — Dark sectioning on the GPU with dataset-level calibration
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22782788.svg)](https://doi.org/10.5281/zenodo.22782788)
+
 ![Same output as the published Dark sectioning, about 30 times faster on the GPU](docs/readme_banner.png)
 
 **Same output, ~30× faster.** darksec reproduces the published Dark sectioning implementation (r = 1.000000 on the
@@ -176,6 +178,17 @@ darksec implements the Dark sectioning algorithm of Cao, R. et al., "Dark-based 
 removal in fluorescence microscopy", *Nature Methods* 22, 1299–1310 (2025), whose reference implementation is published at
 [github.com/Cao-ruijie/Dark-sectioning](https://github.com/Cao-ruijie/Dark-sectioning) (see `NOTICE` for its licence statement). Please cite
 that paper when you use this tool.
+
+## Citation
+
+If you use darksec, please cite the Dark sectioning paper and this software:
+
+> Cao, R. et al. Dark-based optical sectioning assists background removal in
+> fluorescence microscopy. *Nature Methods* **22**, 1299-1310 (2025).
+> https://doi.org/10.1038/s41592-025-02667-6
+
+> Ohishi, H. darksec: Dark sectioning on the GPU with dataset-level calibration.
+> Zenodo (2026). https://doi.org/10.5281/zenodo.22782788
 
 ## Contact
 
