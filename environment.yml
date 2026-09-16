@@ -1,0 +1,41 @@
+# Conda environment for the Dark Sectioning GPU tool (darksec) and its tests.
+# Pinned to the versions this tool was developed and validated with (Python 3.10,
+# CuPy 13.6 built for CUDA 11.x, NVIDIA driver >= 525, RTX 4070 SUPER).
+#
+#   conda env create -f environment.yml
+#   conda activate darksec
+#
+# CUDA build: `cupy-cuda11x` needs the CUDA 11.x runtime libraries. The wheel below
+# (`nvidia-cufft-cu11` 10.9.0.58 = cuFFT of CUDA 11.8) is REQUIRED: the cuFFT shipped with
+# CUDA 11.1 (10.3.0.105) returns wrong, non-deterministic 2-D complex128 transforms for
+# sizes with a large prime factor (README, "cuFFT"). If your machine has CUDA 12 instead,
+# replace `cupy-cuda11x` by `cupy-cuda12x` and `nvidia-cufft-cu11` by `nvidia-cufft-cu12`;
+# darksec itself only uses the CuPy API. After installing, make sure CuPy actually loads the
+# wheel's library (see README quickstart; `python -c "from cupy.cuda import cufft; print(cufft.getVersion())"`
+# must print 10900 or higher, not 10300).
+name: darksec
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      # core (darksec/, run_ds.py)
+      - cupy-cuda11x==13.6.0
+      - nvidia-cufft-cu11==10.9.0.58
+      - numpy==2.2.6
+      - scipy==1.15.3
+      - tifffile==2024.12.12
+      - imagecodecs==2024.9.22
+      - liffile==2025.4.12
+      - pyyaml==6.0.2
+      - pandas==2.2.3
+      - matplotlib==3.10.1
+      - scikit-image==0.25.2
+      # CPU reference implementation of the published MATLAB code (tests/, benchmarks)
+      - joblib==1.5.1
+      - threadpoolctl==3.6.0
+      # smFISH analyses only (tests/smfish_*.py): Big-FISH spot detection and cellpose segmentation.
+      # cellpose pulls a CUDA-12 build of torch (independent of CuPy's CUDA 11 libraries).
+      - big-fish==0.6.2
+      - cellpose==4.0.4

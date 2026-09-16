@@ -1,0 +1,62 @@
+darksec — Dark sectioning on the GPU with dataset-level calibration
+Copyright 2026 Hiroaki Ohishi (Dokkyo Medical University)
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+The example images in data/ are released under the Creative Commons Attribution
+4.0 International licence (CC BY 4.0).
+
+------------------------------------------------------------------------------
+Algorithm
+
+This software implements the Dark sectioning algorithm of
+  Cao, R. et al. "Dark-based optical sectioning assists background removal in
+  fluorescence microscopy." Nature Methods 22, 1299-1310 (2025),
+whose reference implementation (MATLAB, Fiji plugin) is published by its authors at
+  https://github.com/Cao-ruijie/Dark-sectioning
+That repository carries no LICENSE file. Its README states: "We claim an
+Apache liscence for Dark sectioning." (github.com/Cao-ruijie/Dark-sectioning,
+commit f131db3badb669e02fdb994517d120a867f69f3b of 2025-10-12, README.md blob
+3e58a28ce2fcc380f3ae316cb46d47d421fe8aed; retrieved 2026-09-16.)
+
+darksec/upstream_ref.py is an independent NumPy implementation of the published
+algorithm, written to reproduce the documented behaviour of that reference
+implementation; darksec/core.py implements the same algorithm for CuPy with the
+changes documented in README.md. Nothing from the reference repository (code,
+Fiji plugin, example images) is redistributed here.
+
+The dark channel prior itself is from
+  He, K., Sun, J. & Tang, X. "Single Image Haze Removal Using Dark Channel Prior."
+  IEEE Transactions on Pattern Analysis and Machine Intelligence 33, 2341-2353 (2011).
+
+------------------------------------------------------------------------------
+Dark-channel prior and guided filter
+(darksec/upstream_ref.py: window_sum_filter, guided_filter, get_dark_channel,
+get_atmosphere, dehaze_lowpass)
+
+These functions follow the MATLAB code of
+  Stephen Tierney, Dark-Channel-Haze-Removal (2014),
+  https://github.com/sjtrny/Dark-Channel-Haze-Removal
+which the reference implementation also builds on. That code is distributed
+under the MIT License, reproduced here:
+
+The MIT License (MIT)
+
+Copyright (c) 2014 Stephen Tierney
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -1,0 +1,73 @@
+{
+ "dataset": "A488_example",
+ "created": "2026-09-09 10:05:38",
+ "settings": {
+  "algorithm_version": "1.1",
+  "lo_percentile": 0.1,
+  "hi_percentile": 99.9,
+  "lo_fixed": null,
+  "hi_fixed": null,
+  "pooling": "median_of_slices",
+  "n_z": 5,
+  "n_t": 2,
+  "factor": 2.0,
+  "background": "moderate",
+  "thres": 70.0,
+  "denoise": false,
+  "atmosphere_rounds": 2,
+  "per_channel_params": {}
+ },
+ "channels": {
+  "470nm": {
+   "key": "470nm",
+   "scale": {
+    "lo": 427.5,
+    "hi": 6877.5
+   },
+   "optics": {
+    "NA": 1.4,
+    "emission_nm": 520.0,
+    "pixel_nm": 103.5540798611111,
+    "factor": 2.0
+   },
+   "n_slices": 10,
+   "percentiles": {
+    "p0.01": 309.0,
+    "p0.1": 377.0,
+    "p1": 601.0,
+    "p50": 3577.0,
+    "p99": 8041.0,
+    "p99.9": 9637.0,
+    "p99.99": 10335.0
+   },
+   "thres": 70.0,
+   "thres_counts": 2198.0882352941176,
+   "fraction_below_thres": 0.1325871785481771,
+   "fraction_above_255": 0.030738981270495756,
+   "atmosphere": [
+    {
+     "a_min": 67.05988526362013,
+     "a_max": 240.43191299500907,
+     "el_max": 265.4793915646182,
+     "el_min": 0.6339539128865578
+    },
+    {
+     "a_min": 25.50080865436064,
+     "a_max": 25.540326939084714,
+     "el_max": 47.08318017119093,
+     "el_min": 0.15378703336180283
+    }
+   ],
+   "atmosphere_alpha_beta": [
+    {
+     "alpha": 0.6546158743326019,
+     "beta": 66.64488896864933
+    },
+    {
+     "alpha": 0.0008420796026066564,
+     "beta": 25.5006791534367
+    }
+   ]
+  }
+ }
+}

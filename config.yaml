@@ -1,0 +1,68 @@
+# ============================================================================
+# Dark Sectioning (GPU) — tool configuration. Single source of truth.
+# Every file of a dataset is processed with the same calibration and the same
+# parameters; per-channel overrides are allowed only because channels are
+# physically different (dye, wavelength), never per file / well.
+# ============================================================================
+
+# Leica project folders. Each is calibrated on its own (one experiment = one
+# intensity scale per channel). Add / remove freely.
+datasets:
+  - ${DARKSEC_RAW_ROOT}/MyExperiment--Project001        # Leica project folder(s); or {path: ..., include: ["TileScan 9/"]}
+  # - {path: data/A488_raw_1024x1024x21.tif, type: tiff, name: example, pixel_nm: 103.554, NA: 1.40, z_step_um: 0.3995, channels: ["470nm"]}
+
+# Results: <output_root>/<dataset folder name>/<same relative path as the .lof>_DS.tif
+output_root: ${DARKSEC_DS_ROOT}
+include_icc: false          # *_ICC.lof (Leica Instant Computational Clearing) are skipped
+
+channels:
+  exclude: []               # channel keys to skip entirely, e.g. ["400nm"]; brightfield is always skipped
+  overrides: {}             # per-LED parameter overrides, e.g. {"400nm": {background: moderate, thres: 50}}
+
+optics:
+  factor: 2                 # legacy "factor" (PSF / cut-off scaling)
+  NA: null                  # null = objective NA from the .xlif
+  emission_nm:              # LED line -> emission wavelength (nm). LAS X does not store emission.
+    "400nm": 460
+    "470nm": 520
+    "542nm": 590
+    "588nm": 620
+    "635nm": 670
+    "740nm": 780
+    "DAPI": 460
+    "561nm": 610
+
+processing:
+  background: moderate      # moderate (2 iterations, ~linear: recommended for quantitation) | severe (3, legacy, superlinear) | mild (1)
+                            # or an explicit schedule {deg: [6, 3], dep: [3, 3]} (advanced). Changing it recalibrates the dataset.
+  model: multiplicative     # multiplicative = published (Koschmieder: J = (I-A)/t + A) | additive = same background estimate B = A(1-t), applied
+                            # linearly (J = I - B; no 1/t amplification, slope 1 for bright objects) | neighbour = classic nearest-neighbour
+                            # deblurring (J = I - alpha*[D*I(z-d) + D*I(z+d)], D = defocus disk of d planes; needs a z-stack, no dark channel)
+                            # | hybrid = neighbour subtraction first, then additive dark-channel iterations on the residual (needs a z-stack)
+  cutoff: legacy            # legacy = kc 0.2 k_m from 0.5 lambda/NA/factor (published) | optical = first zero of the defocus MTF of the
+                            # nearest out-of-focus plane, 0.61 / (dz_eff tan(asin(NA/n))), dz_eff = max(z step, n lambda/NA^2); the
+                            # dark-channel window becomes that defocus radius. Frequencies above the cutoff pass untouched.
+  neighbour: {alpha: 0.45, delta: 1}   # model: neighbour only
+  strength: 95              # 0-100, continuous: dark-channel prior weight x 100. 95 = published algorithm; 0 = no correction (identity);
+                            # 100 = remove the whole estimated atmosphere. Lower values keep more of large objects (nuclei).
+                            # Per channel: channels.overrides: {"DAPI": {strength: 80}}. Changing it recalibrates the dataset.
+  thres: 70                 # background/signal threshold in the [0,255] working scale (legacy meaning)
+  denoise: false            # closing Gaussian, sigma = 1 px. Off = published default (Dark.m denoise=0); legacy GPU runs used true
+  atmosphere_mode: global   # global (one A(x) law per channel & dataset) | per_stack | per_slice (legacy)
+
+calibration:
+  lo_percentile: 0.1        # raw counts mapped to 0
+  hi_percentile: 99.9       # raw counts mapped to 255
+  pooling: median_of_slices # median_of_slices (percentile per sampled slice, median over slices: robust to one bright field) | pooled
+  lo_fixed: null            # set a number to force lo (e.g. camera offset 100) for cross-experiment reproducibility
+  hi_fixed: null            # set a number to force hi
+  n_z: 5                    # z-slices sampled per stack for calibration
+  n_t: 2                    # timepoints sampled per file
+  atmosphere_rounds: 2      # fixed-point rounds for the global atmosphere statistics
+  reuse: true               # reuse <output_root>/<dataset>/calibration.json when present
+  from_file: null           # path to a calibration.json to apply to every dataset (cross-experiment mode)
+
+output:
+  dtype: uint16             # uint16 (clips <0) | float32 (keeps negatives)
+  write_mip: true
+  skip_existing: true

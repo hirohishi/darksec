@@ -1,0 +1,19 @@
+{
+  "upload_type": "software",
+  "title": "darksec: Dark sectioning on the GPU with dataset-level calibration",
+  "description": "GPU (CuPy) implementation of Dark sectioning for widefield fluorescence z-stacks, with one intensity calibration per dataset and channel.",
+  "version": "1.0.0",
+  "license": "apache-2.0",
+  "creators": [
+    {
+      "name": "Ohishi, Hiroaki",
+      "affiliation": "Dokkyo Medical University",
+      "orcid": "0000-0001-6672-4093"
+    }
+  ],
+  "keywords": ["fluorescence microscopy", "background removal",
+               "optical sectioning", "widefield", "GPU", "CuPy", "smFISH"],
+  "related_identifiers": [
+    {"identifier": "10.1038/s41592-025-02667-6", "relation": "cites", "scheme": "doi"}
+  ]
+}
